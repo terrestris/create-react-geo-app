@@ -1,0 +1,48 @@
+{
+  "name": "@terrestris/create-react-geo-app",
+  "version": "0.0.1",
+  "description": "Create a react-geo client based on a comprehensive template.",
+  "keywords": [
+    "react",
+    "react-geo"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:terrestris/create-react-geo-app.git"
+  },
+  "license": "BSD-2-Clause",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "bin": {
+    "create-react-geo-app": "./dist/index.js"
+  },
+  "files": [
+    "./dist"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "lint": "eslint -c .eslintrc.js index.ts",
+    "release": "np --no-yarn",
+    "start": "npm run build && node ./dist/index.js",
+    "test": "npm run typecheck && npm run lint",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "chalk": "^4.1.2",
+    "commander": "^9.1.0",
+    "extract-zip": "^2.0.1",
+    "fs-extra": "^10.0.1",
+    "node-fetch": "^2.6.7"
+  },
+  "devDependencies": {
+    "@terrestris/eslint-config-typescript": "^2.1.0",
+    "@types/fs-extra": "^9.0.13",
+    "@types/node-fetch": "^2.6.1",
+    "eslint": "^8.12.0",
+    "np": "^7.6.1",
+    "typescript": "^4.6.3"
+  },
+  "engines": {
+    "node": ">=14"
+  }
+}
