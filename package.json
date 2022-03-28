@@ -1,6 +1,6 @@
 {
   "name": "@terrestris/create-react-geo-app",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "Create a react-geo client based on a comprehensive template.",
   "keywords": [
     "react",
