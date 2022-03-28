@@ -1,5 +1,5 @@
 # react-geo-client-template
 
 ```
-npx create-react-geo-ap my-react-geo-app
+npx @terrestris/create-react-geo-app my-react-geo-app
 ```
