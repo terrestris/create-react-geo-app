@@ -11,13 +11,13 @@
     "url": "git@github.com:terrestris/create-react-geo-app.git"
   },
   "license": "BSD-2-Clause",
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "bin": {
-    "create-react-geo-app": "./dist/index.js"
+    "create-react-geo-app": "dist/index.js"
   },
   "files": [
-    "./dist"
+    "dist"
   ],
   "scripts": {
     "build": "tsc -p tsconfig.json",
