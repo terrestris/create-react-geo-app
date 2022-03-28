@@ -2,11 +2,17 @@
 
 import chalk from 'chalk';
 import { Command, OptionValues } from 'commander';
-import fs from 'fs-extra';
+import { copy, createWriteStream, writeFile, readJSON, rm } from 'fs-extra';
 import path from 'path';
-import { execSync } from 'child_process';
+import { exec } from 'child_process';
+import util from 'util';
+
 import fetch from 'node-fetch';
 import extract from 'extract-zip';
+
+import { getTempDownloadFolder, removeTempDownloadFolder } from './src/os-util';
+
+const asyncExec = util.promisify(exec); // make exec awaitable
 
 import packageJson from './package.json';
 
@@ -65,9 +71,9 @@ export const createApp = async (projectName: string, opts: Opts) => {
   const currentDir = process.cwd();
   const projectPath = path.join(currentDir, projectName);
 
-  await downloadTemplate(opts);
+  const tempDir = await downloadTemplate(opts);
 
-  await copyTemplate(projectPath);
+  await copyTemplate(tempDir, projectPath);
 
   await installTemplateDependencies(projectPath);
 
@@ -77,20 +83,25 @@ export const createApp = async (projectName: string, opts: Opts) => {
     await initGitRepository(projectPath);
   }
 
+  await removeTempDownloadFolder(tempDir);
+
   console.log(`${chalk.greenBright('Done! Enjoy!')}`);
 };
 
 const downloadTemplate = async (opts: Opts) => {
   try {
     console.log('Downloading the template application');
-
     const downloadUrl = `${repoUrl}/archive/refs/heads/${opts.tag}.zip`;
-    const targetArchive = path.join('/', 'tmp', 'package.zip');
+
+    const tmpDir: string = await getTempDownloadFolder();
+    const targetArchive = path.join(tmpDir, 'package.zip');
 
     await download(downloadUrl, targetArchive);
-    await extract(targetArchive, { dir: path.join('/', 'tmp') });
+    await extract(targetArchive, { dir: tmpDir });
+    await rm(targetArchive);
 
     console.log(`${chalk.greenBright('SUCCESS!')}`);
+    return tmpDir;
   } catch (error) {
     console.log(`${chalk.bgMagenta('ERROR!')}`);
     console.log(`${error}`);
@@ -98,11 +109,11 @@ const downloadTemplate = async (opts: Opts) => {
   }
 };
 
-const copyTemplate = async (projectPath: string) => {
+const copyTemplate = async (tempDir: string, projectPath: string) => {
   try {
     console.log(`Installing the application to ${chalk.italic(projectPath)}`);
 
-    fs.copySync(path.join('/', 'tmp', 'react-geo-client-template-main'), projectPath);
+    await copy(path.join(tempDir, 'react-geo-client-template-main'), projectPath);
 
     console.log(`${chalk.greenBright('SUCCESS!')}`);
   } catch (error) {
@@ -118,7 +129,7 @@ const installTemplateDependencies = async (projectPath: string) => {
 
     process.chdir(projectPath);
 
-    execSync('npm install');
+    await asyncExec('npm install');
 
     console.log(`${chalk.greenBright('SUCCESS!')}`);
   } catch (error) {
@@ -132,7 +143,7 @@ const prepareTemplatePackage = async (projectPath: string, projectName: string) 
   try {
     console.log('Preparing the package.json');
 
-    const templatePackageJson = fs.readJSONSync(path.join(projectPath, 'package.json'), 'utf8');
+    const templatePackageJson = await readJSON(path.join(projectPath, 'package.json'), 'utf8');
 
     templatePackageJson.name = projectName;
     templatePackageJson.description = 'Bootstrapped with create-react-geo-app';
@@ -141,7 +152,7 @@ const prepareTemplatePackage = async (projectPath: string, projectName: string) 
       type: ''
     };
 
-    fs.writeFileSync(path.join(projectPath, 'package.json'), JSON.stringify(templatePackageJson, null, 2), 'utf8');
+    await writeFile(path.join(projectPath, 'package.json'), JSON.stringify(templatePackageJson, null, 2), 'utf8');
 
     console.log(`${chalk.greenBright('SUCCESS!')}`);
   } catch (error) {
@@ -152,25 +163,28 @@ const prepareTemplatePackage = async (projectPath: string, projectName: string) 
 };
 
 const initGitRepository = async (projectPath: string) => {
+  const currentDir = process.cwd();
   process.chdir(projectPath);
 
   try {
     console.log('Initializing an empty git repository');
 
-    execSync('git init');
+    await asyncExec('git init');
 
     console.log(`${chalk.greenBright('SUCCESS!')}`);
   } catch (error) {
     console.log(`${chalk.bgMagenta('ERROR!')}`);
     console.log(`${error}`);
     process.exit(1);
+  } finally {
+    process.chdir(currentDir);
   }
 };
 
 const download = async (url: string, name: string) => {
   const res = await fetch(url);
   await new Promise((resolve, reject) => {
-    const fileStream = fs.createWriteStream(name);
+    const fileStream = createWriteStream(name);
     res.body?.pipe(fileStream);
     res.body?.on('error', (err) => {
       reject(err);
