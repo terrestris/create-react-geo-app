@@ -21,7 +21,9 @@ export const init = () => {
   let projectName = '';
   let options: Opts = {};
 
-  const program = new Command(packageJson.name)
+  const programName = Object.keys(packageJson?.bin)[0] || packageJson.name;
+
+  const program = new Command(programName)
     .version(packageJson.version)
     .description('Creates a new react-geo project in the given directory based on a comprehensive template')
     .arguments('<project-directory>')
