@@ -46,7 +46,7 @@ jobs:
       timeout-minutes: 3
 
     - name: Run Playwright tests
-      run:  npm run test:e2e
+      run: npm run test:e2e
 
     - name: Remove temporary application dir
       run: rm -r ./tmp-e2e-app-dir
