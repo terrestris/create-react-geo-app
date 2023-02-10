@@ -1,0 +1,60 @@
+name: Lint, typecheck, build, run and e2e test the CRGA
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    timeout-minutes: 60
+    runs-on: ubuntu-latest
+
+    steps:
+
+    - name: Checkout sources
+      uses: actions/checkout@v3
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: 16
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Lint and typecheck
+      run: npm test
+
+    - name: Create a build
+      run: npm run build
+
+    - name: Install Playwright Browsers
+      run: npx playwright install --with-deps
+
+    - name: Execute CRGA
+      run: >
+        mkdir ./tmp-e2e-app-dir &&
+        npm start tmp-e2e-app-dir
+
+    - name: Run generated app
+      run: >
+        cd tmp-e2e-app-dir &&
+        npm start & sleep 60 &&
+        cd ..
+      timeout-minutes: 3
+
+    - name: Run Playwright tests
+      run: npm run test:e2e
+
+    - name: Remove temporary application dir
+      run: rm -r ./tmp-e2e-app-dir
+
+    - name: Upload report
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: playwright-report
+        path: playwright-report/
+        retention-days: 2

@@ -25,6 +25,7 @@
     "release": "np --no-yarn",
     "start": "npm run build && node ./dist/index.js",
     "test": "npm run typecheck && npm run lint",
+    "test:e2e": "playwright test",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
@@ -35,6 +36,7 @@
     "node-fetch": "^2.6.7"
   },
   "devDependencies": {
+    "@playwright/test": "^1.30.0",
     "@terrestris/eslint-config-typescript": "^2.1.0",
     "@types/fs-extra": "^9.0.13",
     "@types/node-fetch": "^2.6.1",
