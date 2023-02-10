@@ -10,8 +10,9 @@
     "type": "git",
     "url": "git@github.com:terrestris/create-react-geo-app.git"
   },
+  "type": "module",
   "license": "BSD-2-Clause",
-  "main": "dist/index.js",
+  "exports": "./dist/index.js",
   "types": "dist/index.d.ts",
   "bin": {
     "create-react-geo-app": "dist/index.js"
@@ -21,7 +22,7 @@
   ],
   "scripts": {
     "build": "tsc -p tsconfig.json",
-    "lint": "eslint -c .eslintrc.js index.ts",
+    "lint": "eslint -c .eslintrc.cjs index.ts",
     "release": "np --no-yarn",
     "start": "npm run build && node ./dist/index.js",
     "test": "npm run typecheck && npm run lint",
@@ -45,6 +46,6 @@
     "typescript": "^4.9.5"
   },
   "engines": {
-    "node": ">=14"
+    "node": ">=14.16"
   }
 }
