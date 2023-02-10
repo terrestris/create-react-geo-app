@@ -1,6 +1,10 @@
-import { mkdtemp, rm } from 'fs-extra';
-import { tmpdir } from 'os';
-import { join } from 'path';
+import fse from 'fs-extra';
+import os from 'os';
+import path from 'path';
+
+const { mkdtemp, rm } = fse;
+const { tmpdir } = os;
+const { join } = path;
 
 // A tiny cache, so we only delete what we have created
 let createdTempDirs: string[] = [];

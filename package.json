@@ -10,8 +10,9 @@
     "type": "git",
     "url": "git@github.com:terrestris/create-react-geo-app.git"
   },
+  "type": "module",
   "license": "BSD-2-Clause",
-  "main": "dist/index.js",
+  "exports": "./dist/index.js",
   "types": "dist/index.d.ts",
   "bin": {
     "create-react-geo-app": "dist/index.js"
@@ -21,7 +22,7 @@
   ],
   "scripts": {
     "build": "tsc -p tsconfig.json",
-    "lint": "eslint -c .eslintrc.js index.ts",
+    "lint": "eslint -c .eslintrc.cjs index.ts",
     "release": "np --no-yarn",
     "start": "npm run build && node ./dist/index.js",
     "test": "npm run typecheck && npm run lint",
@@ -29,22 +30,22 @@
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
-    "chalk": "^4.1.2",
-    "commander": "^9.1.0",
+    "chalk": "^5.2.0",
+    "commander": "^10.0.0",
     "extract-zip": "^2.0.1",
-    "fs-extra": "^10.0.1",
-    "node-fetch": "^2.6.7"
+    "fs-extra": "^11.1.0",
+    "node-fetch": "^3.3.0"
   },
   "devDependencies": {
     "@playwright/test": "^1.30.0",
-    "@terrestris/eslint-config-typescript": "^2.1.0",
-    "@types/fs-extra": "^9.0.13",
-    "@types/node-fetch": "^2.6.1",
-    "eslint": "^8.12.0",
-    "np": "^7.6.1",
-    "typescript": "^4.6.3"
+    "@terrestris/eslint-config-typescript": "^3.1.0",
+    "@types/fs-extra": "^11.0.1",
+    "@types/node-fetch": "^2.6.2",
+    "eslint": "^8.33.0",
+    "np": "^7.6.3",
+    "typescript": "^4.9.5"
   },
   "engines": {
-    "node": ">=14"
+    "node": ">=14.16"
   }
 }

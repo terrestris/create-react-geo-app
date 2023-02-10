@@ -2,7 +2,8 @@
 
 import chalk from 'chalk';
 import { Command, OptionValues } from 'commander';
-import { copy, createWriteStream, writeFile, readJSON, rm } from 'fs-extra';
+import fse from 'fs-extra';
+const { copy, createWriteStream, writeFile, readJSON, rm } = fse;
 import path from 'path';
 import { exec } from 'child_process';
 import util from 'util';
@@ -10,11 +11,11 @@ import util from 'util';
 import fetch from 'node-fetch';
 import extract from 'extract-zip';
 
-import { getTempDownloadFolder, removeTempDownloadFolder } from './src/os-util';
+import { getTempDownloadFolder, removeTempDownloadFolder } from './src/os-util.js';
 
 const asyncExec = util.promisify(exec); // make exec awaitable
 
-import packageJson from './package.json';
+import packageJson from './package.json' assert { type: 'json' };
 
 export interface Opts extends OptionValues {
   gitInit?: boolean;
