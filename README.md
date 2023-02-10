@@ -1,5 +1,7 @@
 # create-react-geo-app (CRGA)
 
+[![Lint, typecheck, build, run and e2e test the CRGA](https://github.com/terrestris/create-react-geo-app/actions/workflows/full-check.yml/badge.svg)](https://github.com/terrestris/create-react-geo-app/actions/workflows/full-check.yml)
+
 A command line interface to quickly create a [`react-geo`](https://github.com/terrestris/react-geo)
 based web GIS application based on a [comprehensive template](https://github.com/terrestris/react-geo-client-template).
 There is probably no easier way to get started with `react-geo` or to bootstrap an
